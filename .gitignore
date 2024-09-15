@@ -39,6 +39,7 @@ ENV/
 
 # PyCharm project settings
 .idea/
+*.idea/
 
 # OS-specific files
 .DS_Store
