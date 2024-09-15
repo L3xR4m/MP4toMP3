@@ -19,10 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-### Note on FFmpeg
-
-This project uses FFmpeg, a powerful multimedia framework for handling video, audio, and other multimedia files and streams. 
-FFmpeg is licensed under the GNU Lesser General Public License (LGPL) or the GNU General Public License (GPL). 
-For more details on FFmpeg's licensing terms, please refer to [FFmpeg's official license documentation](https://ffmpeg.org/legal.html).
