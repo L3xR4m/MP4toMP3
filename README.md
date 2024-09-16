@@ -1,6 +1,6 @@
 # 🎶 MP4 to MP3 Converter 🎧
 
-A simple MP4 to MP3 converter. Built with Python, FFmpeg, and Tkinter.
+A simple GUI MP4 to MP3 converter. Built with Python, FFmpeg, and Tkinter.
 Supports custom bitrates, drag-and-drop functionality, and directory export options.
 
 ![screenshot.png](assets/screenshot.png)
