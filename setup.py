@@ -114,19 +114,41 @@ def open_directory():
 
 
 def on_drop(event):
-    global export_directory
+    global export_directory, selected_directory  # Declare selected_directory as global
     # Clean the file path by stripping unwanted characters like '{' and '}'
-    file_path = event.data.strip(' {}')  # Removes braces and extra spaces
-
-    if file_path:
+    dropped_path = event.data.strip(' {}')  # Removes braces and extra spaces
+    if os.path.isdir(dropped_path):
+        # Use the global selected_directory
+        selected_directory = dropped_path
         selected_files.clear()
-        selected_files.append(file_path)
-        file_label.config(text=f"Selected File: {os.path.basename(file_path)}")
-        export_directory = os.path.dirname(file_path)
-        # Reset the status label
-        status_label.config(text="Waiting for conversion", fg='yellow')
+        # Add all .mp4 files in the directory to the selected files
+        for file_name in os.listdir(selected_directory):
+            if file_name.endswith(".mp4"):
+                selected_files.append(os.path.join(selected_directory, file_name))
+        # Update the folder label to show the selected directory
+        folder_label.config(text=f"Selected Directory: {selected_directory}")
+        # Reset the file label to "No File Selected"
+        file_label.config(text="No File Selected")
+        # Set the export directory to the selected directory
+        export_directory = selected_directory
+        # Update status
+        status_label.config(text="Folder dropped, waiting for conversion", fg='yellow')
+    elif os.path.isfile(dropped_path) and dropped_path.endswith(".mp4"):
+        # If a file is dropped
+        selected_files.clear()
+        selected_files.append(dropped_path)
+        # Update the file label to show the selected file
+        file_label.config(text=f"Selected File: {os.path.basename(dropped_path)}")
+        # Reset the folder label to "No Directory Selected"
+        folder_label.config(text="No Directory Selected")
+        # Set the export directory to the file's directory
+        export_directory = os.path.dirname(dropped_path)
+        # Update status
+        status_label.config(text="File dropped, waiting for conversion", fg='yellow')
     else:
-        messagebox.showwarning("Invalid File", "Dropped file is not valid.")
+        # If the dropped item is not valid, show a warning
+        messagebox.showwarning("Invalid File", "Dropped item is not a valid MP4 file or folder.")
+
 
 def run_conversion():
     global export_directory
