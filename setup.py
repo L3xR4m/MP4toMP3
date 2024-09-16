@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox, PhotoImage
 from tkinterdnd2 import TkinterDnD, DND_FILES
 import ffmpeg
 import os
+import sys
 import re
 
 # Initialize variables with default values
@@ -80,12 +81,37 @@ def select_file():
     global export_directory
     file_path = filedialog.askopenfilename(filetypes=[("MP4 files", "*.mp4")])
     if file_path:
+        # Clear selected files and add file
         selected_files.clear()
         selected_files.append(file_path)
+        # Update the file label to show the selected file
         file_label.config(text=f"Selected File: {os.path.basename(file_path)}")
+        # Reset the folder label to "No Folder Selected"
+        folder_label.config(text="No Folder Selected")
+        # Set the export directory to the selected directory
         export_directory = os.path.dirname(file_path)
         # Reset the status label
         status_label.config(text="Waiting for conversion", fg='yellow')
+
+
+def open_directory():
+    global selected_directory, export_directory
+    selected_directory = filedialog.askdirectory()
+    if selected_directory:
+        # Clear selected files and add files from the selected directory
+        selected_files.clear()
+        for file_name in os.listdir(selected_directory):
+            if file_name.endswith(".mp4"):
+                selected_files.append(os.path.join(selected_directory, file_name))
+        # Update the folder label to show the selected directory
+        folder_label.config(text=f"Selected Directory: {selected_directory}")
+        # Reset the file label to "No File Selected"
+        file_label.config(text="No File Selected")
+        # Set the export directory to the selected directory
+        export_directory = selected_directory
+        # Reset the status label to "Waiting for conversion"
+        status_label.config(text="Waiting for conversion", fg='yellow')
+
 
 def on_drop(event):
     global export_directory
@@ -122,17 +148,6 @@ def run_conversion():
         messagebox.showwarning("No Files", "No MP4 files selected for conversion.")
         status_label.config(text="Choose a source file or folder", fg='red')
 
-def open_directory():
-    global selected_directory, export_directory
-    selected_directory = filedialog.askdirectory()
-    if selected_directory:
-        selected_files.clear()
-        for file_name in os.listdir(selected_directory):
-            if file_name.endswith(".mp4"):
-                selected_files.append(os.path.join(selected_directory, file_name))
-        file_label.config(text=f"Selected Directory: {selected_directory}")
-        export_directory = selected_directory
-
 def specify_export_directory():
     global export_directory
     export_directory = filedialog.askdirectory()
@@ -154,10 +169,25 @@ def open_destination():
         messagebox.showwarning("No Directory", "No export directory specified and no files converted yet.")
 
 def show_about():
-    messagebox.showinfo("About", "MP4 to MP3 Converter\nVersion 1.0\nReleased by L3xR4m")
+    messagebox.showinfo("About", "MP4 to MP3 Converter\nVersion 1.1\nReleased by L3xR4m")
 
 def exit_application():
     root.destroy()
+
+
+# noinspection PyProtectedMember
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and PyInstaller """
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller-specific
+        base_path = sys._MEIPASS  # This is only for PyInstaller packaged version
+    else:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
+### === /// === ### === /// === ###
 
 # Create the main application window with TkinterDnD
 root = TkinterDnD.Tk()
@@ -171,7 +201,7 @@ window_height = 600
 center_window(root, window_width, window_height)
 
 # Load the icon file
-icon = PhotoImage(file='B:\\PROJECTS\\CODING\\PycharmProjects\\MP4toMP3\\assets\\icon.png')
+icon = PhotoImage(file=resource_path('icon.png'))
 
 # Set the window icon
 root.iconphoto(False, icon)
